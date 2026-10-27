@@ -6,7 +6,7 @@
 /*   By: sazaroua <sazaroua@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/10/19 11:18:32 by username          #+#    #+#             */
-/*   Updated: 2026/10/27 14:47:56 by sazaroua         ###   ########.fr       */
+/*   Updated: 2026/10/27 17:31:51 by sazaroua         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,40 +58,76 @@ static int	ft_len(char const *s, char c)
 	return (len);
 }
 
-char	**ft_split(char const *s, char c)
-{
-	char	**res;
-	int		count_w;
-	int		j;
-	int		i;
-	int		k;
+// char	**ft_split(char const *s, char c)
+// {
+// 	char	**res;
+// 	int		count_w;
+// 	int		j;
+// 	int		i;
+// 	int		k;
 
-	if (!s)
-		return (NULL);
-	count_w = ft_count_world(s, c);
-	res = malloc(sizeof(char *) * (count_w + 1));
-	if (!res)
-		return (NULL);
-	j = 0;
+// 	if (!s)
+// 		return (NULL);
+// 	count_w = ft_count_world(s, c);
+// 	res = malloc(sizeof(char *) * (count_w + 1));
+// 	if (!res)
+// 		return (NULL);
+// 	j = 0;
+// 	i = 0;
+// 	while (s[i])
+// 	{
+// 		while (s[i] && s[i] == c)
+// 			i++;
+// 		if (!s[i])
+// 			break ;
+// 		k = 0;
+// 		res[j] = malloc(sizeof(char) * (ft_len(&s[i], c) + 1));
+// 		if (!res[j])
+// 		{
+// 			ft_free(res, j);
+// 			return (NULL);
+// 		}
+// 		while (s[i] && s[i] != c)
+// 			res[j][k++] = s[i++];
+// 		res[j][k] = '\0';
+// 		j++;
+// 	}
+// 	res[j] = NULL;
+// 	return (res);
+// }
+static int	ft_fill_split(char **res, char const *s, char c)
+{
+	int	i;
+	int	j;
+
 	i = 0;
+	j = 0;
 	while (s[i])
 	{
-		while (s[i] && s[i] == c)
+		while (s[i] == c)
 			i++;
 		if (!s[i])
 			break ;
-		k = 0;
-		res[j] = malloc(sizeof(char) * (ft_len(&s[i], c) + 1));
+		res[j] = ft_substr(s, i, ft_len(&s[i], c));
 		if (!res[j])
-		{
-			ft_free(res, j);
-			return (NULL);
-		}
-		while (s[i] && s[i] != c)
-			res[j][k++] = s[i++];
-		res[j][k] = '\0';
+			return (ft_free(res, j), 0);
+		i += ft_len(&s[i], c);
 		j++;
 	}
 	res[j] = NULL;
+	return (1);
+}
+
+char	**ft_split(char const *s, char c)
+{
+	char	**res;
+
+	if (!s)
+		return (NULL);
+	res = malloc(sizeof(char *) * (ft_count_world(s, c) + 1));
+	if (!res)
+		return (NULL);
+	if (!ft_fill_split(res, s, c))
+		return (NULL);
 	return (res);
 }
